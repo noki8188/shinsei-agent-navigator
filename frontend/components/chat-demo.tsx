@@ -114,7 +114,7 @@ export function ChatDemo() {
         <p className="eyebrow">Interactive PoC</p>
         <h2>相談入力から申請ドラフトまで確認する</h2>
         <p className="supporting-copy">
-          Python バックエンドが起動していれば、分類、補問、草稿、レビュー結果を返します。
+          Python バックエンドが起動していれば、env 設定に応じて rule-based または OpenAI Responses API backend で、分類、補問、草稿、レビュー結果を返します。LLM が使えない場合は trace に理由を残して fallback します。
         </p>
       </div>
 

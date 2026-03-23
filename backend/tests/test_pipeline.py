@@ -50,6 +50,8 @@ class InternalApplicationNavigatorTest(unittest.TestCase):
         result = self.navigator.handle(
             UserRequest(message="先週の会食代を精算したいです。金額は 12,000 円です")
         )
+        self.assertEqual(result.trace.timeline[0], "Workflow Runtime: rule_based")
+        self.assertFalse(any("fallback" in item for item in result.trace.timeline))
         self.assertEqual(result.trace.classification.case_type, "expense")
         self.assertTrue(result.trace.clarification.questions)
         self.assertTrue(result.trace.rule_references.documents)

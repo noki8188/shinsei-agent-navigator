@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from app.models import UserRequest
-from app.pipeline import InternalApplicationNavigator
+from app.runtime import build_navigator_from_env
 
 
 class ChatRequest(BaseModel):
@@ -14,7 +14,7 @@ class ChatRequest(BaseModel):
     department: str | None = None
 
 
-app = FastAPI(title="社内申請ナビゲーター API", version="0.2.0")
+app = FastAPI(title="社内申請ナビゲーター API", version="0.3.1")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -23,9 +23,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-navigator = InternalApplicationNavigator()
-
-
 @app.get("/health")
 def healthcheck() -> dict[str, str]:
     return {"status": "ok"}
@@ -33,6 +30,7 @@ def healthcheck() -> dict[str, str]:
 
 @app.post("/api/chat/demo")
 def chat_demo(request: ChatRequest) -> dict[str, object]:
+    navigator = build_navigator_from_env()
     response = navigator.handle(
         UserRequest(
             message=request.message,

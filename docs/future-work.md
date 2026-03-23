@@ -1,6 +1,6 @@
 # Future Work
 
-## v0.2 時点で未対応の範囲
+## v0.3.1 時点で未対応の範囲
 
 - 実システム連携
   - SSO、社員マスタ、稟議システム、経費精算システムとの接続
@@ -12,23 +12,27 @@
   - 権限制御、監査ログの永続化、個人情報マスキング、操作証跡の保存
 - 評価
   - 類型分類の精度測定、補問漏れ評価、レビュー誤検知率の計測
+  - 実 provider を使った継続的な回帰評価と prompt 管理
+  - fallback 発生率や retry 率の継続観測
 
-## LLM 実装へ進めるときの差し替え候補
+## すでに着手した hardening
 
 - `CaseClassifier`
-  - ルールベース分類を intent classification モデルへ置換
+  - OpenAI Responses API + Structured Outputs で schema 制約付きの実装に更新した
 - `ClarificationAgent`
-  - 必須項目検出を schema-guided extraction へ置換
+  - knowledge を一次ソースにした Structured Outputs 実装に更新した
 - `DraftAgent`
-  - Markdown テンプレート埋め込み中心の実装を、規程引用付きの生成へ置換
-- `ReviewAgent`
-  - 固定ルール中心のチェックを、理由付き compliance review へ置換
-- `TraceBuilder`
-  - 単純な文字列 trace を、根拠付き reasoning trace と評価メタデータへ拡張
+  - rule-based の承認経路を維持しつつ、草稿本文を OpenAI Responses API で生成するようにした
+- `Fallback`
+  - validation error、API key 不足、OpenAI API 失敗時に agent 単位で rule-based fallback するようにした
+- `Integration test`
+  - API key がある場合だけ動く OpenAI smoke test を追加した
+- `Evaluation`
+  - rule_based と llm を同じ eval で比較できるようにした
 
 ## 先にやると効果が大きい項目
 
-1. ナレッジソースの拡張
-2. 類型ごとのテストケース増強
+1. ナレッジソースの拡張と RAG 化
+2. `ReviewAgent` の LLM 化と structured review 強化
 3. 外部承認マスタ参照
-4. LLM 実装の PoC と比較評価
+4. 実 provider を含む継続評価と observability

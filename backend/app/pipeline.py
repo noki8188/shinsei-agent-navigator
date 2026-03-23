@@ -26,6 +26,7 @@ from app.models import (
     RuleReferenceTrace,
     UserRequest,
 )
+from app.runtime_events import WorkflowRunObserver
 
 
 CITY_WORDS = ["東京", "大阪", "名古屋", "福岡", "札幌", "沖縄", "京都", "横浜"]
@@ -42,6 +43,8 @@ class InternalApplicationNavigator:
         draft_agent: DraftAgent | None = None,
         review_agent: ReviewAgent | None = None,
         trace_builder: TraceBuilder | None = None,
+        runtime_label: str = "rule_based",
+        run_observer: WorkflowRunObserver | None = None,
     ) -> None:
         self.knowledge_base = knowledge_base or KnowledgeBase()
         self.case_classifier = case_classifier or RuleBasedCaseClassifier()
@@ -50,8 +53,13 @@ class InternalApplicationNavigator:
         self.draft_agent = draft_agent or RuleBasedDraftAgent()
         self.review_agent = review_agent or RuleBasedReviewAgent()
         self.trace_builder = trace_builder or RuleBasedTraceBuilder()
+        self.runtime_label = runtime_label
+        self.run_observer = run_observer
 
     def handle(self, request: UserRequest) -> PipelineResponse:
+        if self.run_observer is not None:
+            self.run_observer.reset()
+
         classification = self.case_classifier.classify(request.message, self.knowledge_base)
         state = self.message_analyzer.analyze(classification.case_type, request.message)
         docs = self.knowledge_base.get_docs(classification.case_type)
@@ -71,6 +79,9 @@ class InternalApplicationNavigator:
         trace = self.trace_builder.build(
             classification, docs, state, clarification_items, review_result
         )
+        trace.timeline.insert(0, f"Workflow Runtime: {self.runtime_label}")
+        if self.run_observer is not None:
+            trace.timeline[1:1] = self.run_observer.timeline_entries()
 
         return PipelineResponse(
             case_type=classification.case_type,

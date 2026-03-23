@@ -93,6 +93,8 @@ type PipelineTrace = {
     policyRisks: string[];
     humanCheckpoints: string[];
   };
+  // timeline の先頭には backend 名が入り、
+  // LLM backend では success / fallback 理由もここに残る
   timeline: string[];
 };
 

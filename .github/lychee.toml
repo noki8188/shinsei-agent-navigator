@@ -1,0 +1,6 @@
+exclude = [
+  "^http://127\\.0\\.0\\.1",
+  "^http://localhost"
+]
+max_retries = 2
+timeout = 20
