@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "shinsei-navigator-backend"
+version = "0.1.0"
+description = "Backend pipeline for the internal application navigator PoC"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+  "fastapi>=0.115.0",
+  "uvicorn>=0.32.0"
+]
+
+[tool.setuptools.packages.find]
+where = ["."]

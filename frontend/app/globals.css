@@ -1,0 +1,265 @@
+:root {
+  --bg: #f7f0e4;
+  --bg-accent: #efe0c7;
+  --panel: rgba(255, 252, 246, 0.88);
+  --line: rgba(71, 61, 44, 0.12);
+  --ink: #1e2b2c;
+  --muted: #566161;
+  --brand: #0d7a72;
+  --brand-strong: #125950;
+  --highlight: #d9763d;
+  --shadow: 0 24px 60px rgba(63, 41, 20, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--ink);
+  background:
+    radial-gradient(circle at top left, rgba(217, 118, 61, 0.16), transparent 32%),
+    radial-gradient(circle at bottom right, rgba(13, 122, 114, 0.18), transparent 28%),
+    linear-gradient(180deg, var(--bg) 0%, #f9f4ea 48%, #fbf9f4 100%);
+  font-family: "Hiragino Sans", "Noto Sans JP", sans-serif;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+textarea {
+  font: inherit;
+}
+
+.page-shell {
+  width: min(1180px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 48px 0 80px;
+}
+
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 24px;
+  align-items: stretch;
+}
+
+.hero-copy,
+.hero-panel,
+.insight-card,
+.agent-card,
+.demo-panel,
+.result-card {
+  border: 1px solid var(--line);
+  border-radius: 28px;
+  background: var(--panel);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--shadow);
+}
+
+.hero-copy {
+  padding: 36px;
+}
+
+.hero-copy h1 {
+  margin: 0;
+  font-size: clamp(2.6rem, 5vw, 5rem);
+  line-height: 0.96;
+  letter-spacing: -0.04em;
+}
+
+.lead {
+  max-width: 42rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.hero-panel {
+  padding: 28px;
+  background:
+    linear-gradient(135deg, rgba(13, 122, 114, 0.16), rgba(217, 118, 61, 0.18)),
+    rgba(255, 252, 246, 0.9);
+}
+
+.hero-panel p,
+.panel-header h2,
+.result-card h3,
+.agent-card h3,
+.insight-card h2 {
+  margin-top: 0;
+}
+
+.hero-panel ul,
+.insight-card ul,
+.agent-card p,
+.result-card ul,
+.result-card ol {
+  margin-bottom: 0;
+}
+
+.eyebrow {
+  margin: 0 0 12px;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--brand-strong);
+}
+
+.insight-grid,
+.agent-grid,
+.result-grid {
+  display: grid;
+  gap: 20px;
+}
+
+.insight-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.insight-card,
+.agent-card,
+.result-card {
+  padding: 24px;
+}
+
+.agent-section,
+.demo-panel {
+  margin-top: 28px;
+}
+
+.agent-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.panel-header {
+  margin-bottom: 18px;
+}
+
+.supporting-copy {
+  color: var(--muted);
+}
+
+.sample-prompt-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.ghost-button,
+.primary-button {
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.ghost-button {
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.ghost-button:hover,
+.primary-button:hover {
+  transform: translateY(-1px);
+}
+
+.chat-form {
+  display: grid;
+  gap: 12px;
+}
+
+.chat-form textarea {
+  width: 100%;
+  resize: vertical;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.primary-button {
+  width: fit-content;
+  padding: 12px 18px;
+  color: white;
+  background: linear-gradient(135deg, var(--brand), var(--brand-strong));
+}
+
+.error-banner {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: rgba(217, 118, 61, 0.12);
+  color: #7a3217;
+}
+
+.result-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-top: 24px;
+}
+
+.result-card-wide {
+  grid-column: span 2;
+}
+
+.result-type,
+.draft-title {
+  font-weight: 700;
+  color: var(--brand-strong);
+}
+
+.result-card li {
+  margin-bottom: 10px;
+}
+
+.result-card li span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+}
+
+.result-card pre {
+  white-space: pre-wrap;
+  overflow-x: auto;
+  border-radius: 20px;
+  padding: 16px;
+  background: rgba(30, 43, 44, 0.06);
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.tag {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(13, 122, 114, 0.12);
+  color: var(--brand-strong);
+}
+
+@media (max-width: 920px) {
+  .hero,
+  .insight-grid,
+  .agent-grid,
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-card-wide {
+    grid-column: span 1;
+  }
+}
+
