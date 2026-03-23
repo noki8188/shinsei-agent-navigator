@@ -14,7 +14,7 @@ class ChatRequest(BaseModel):
     department: str | None = None
 
 
-app = FastAPI(title="社内申請ナビゲーター API", version="0.1.0")
+app = FastAPI(title="社内申請ナビゲーター API", version="0.2.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -41,4 +41,3 @@ def chat_demo(request: ChatRequest) -> dict[str, object]:
         )
     )
     return response.to_dict()
-

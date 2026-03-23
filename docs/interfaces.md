@@ -73,13 +73,35 @@ type ReviewResult = {
 ## PipelineResponse
 
 ```ts
+type PipelineTrace = {
+  classification: {
+    caseType: CaseType;
+    matchedKeywords: string[];
+    rationale: string;
+  };
+  clarification: {
+    extractedFields: string[];
+    missingFields: string[];
+    questions: string[];
+  };
+  ruleReferences: {
+    documents: string[];
+    appliedRules: string[];
+  };
+  review: {
+    verdict: "ready_with_review" | "needs_follow_up";
+    policyRisks: string[];
+    humanCheckpoints: string[];
+  };
+  timeline: string[];
+};
+
 type PipelineResponse = {
   caseType: CaseType;
   policyDocs: PolicyDoc[];
   clarificationItems: ClarificationItem[];
   draftResult: DraftResult;
   reviewResult: ReviewResult;
-  trace: string[];
+  trace: PipelineTrace;
 };
 ```
-

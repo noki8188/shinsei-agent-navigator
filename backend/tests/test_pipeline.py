@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import unittest
 
+from app.agent_interfaces import ClassificationDecision
 from app.models import CaseType, UserRequest
 from app.pipeline import InternalApplicationNavigator
 
@@ -44,6 +45,29 @@ class InternalApplicationNavigatorTest(unittest.TestCase):
         self.assertEqual(result.case_type, CaseType.PURCHASE)
         self.assertIn("稟議承認", result.draft_result.approval_route)
         self.assertIn("50万円以上の購入は稟議起票を前提に確認してください。", result.review_result.policy_risks)
+
+    def test_returns_structured_trace_sections(self) -> None:
+        result = self.navigator.handle(
+            UserRequest(message="先週の会食代を精算したいです。金額は 12,000 円です")
+        )
+        self.assertEqual(result.trace.classification.case_type, "expense")
+        self.assertTrue(result.trace.clarification.questions)
+        self.assertTrue(result.trace.rule_references.documents)
+        self.assertTrue(result.trace.timeline)
+
+    def test_allows_classifier_to_be_swapped(self) -> None:
+        class StubClassifier:
+            def classify(self, message: str, knowledge_base: object) -> ClassificationDecision:
+                return ClassificationDecision(
+                    case_type=CaseType.BUSINESS_TRIP,
+                    matched_keywords=["stub"],
+                    rationale="stub classifier",
+                )
+
+        navigator = InternalApplicationNavigator(case_classifier=StubClassifier())
+        result = navigator.handle(UserRequest(message="分類結果を差し替えたいです"))
+        self.assertEqual(result.case_type, CaseType.BUSINESS_TRIP)
+        self.assertEqual(result.trace.classification.matched_keywords, ["stub"])
 
 
 if __name__ == "__main__":

@@ -30,13 +30,36 @@ type ReviewResult = {
   humanCheckpoints: string[];
 };
 
+type PipelineTrace = {
+  classification: {
+    caseType: string;
+    matchedKeywords: string[];
+    rationale: string;
+  };
+  clarification: {
+    extractedFields: string[];
+    missingFields: string[];
+    questions: string[];
+  };
+  ruleReferences: {
+    documents: string[];
+    appliedRules: string[];
+  };
+  review: {
+    verdict: string;
+    policyRisks: string[];
+    humanCheckpoints: string[];
+  };
+  timeline: string[];
+};
+
 type PipelineResponse = {
   caseType: string;
   policyDocs: PolicyDoc[];
   clarificationItems: ClarificationItem[];
   draftResult: DraftResult;
   reviewResult: ReviewResult;
-  trace: string[];
+  trace: PipelineTrace;
 };
 
 const samplePrompts = [
@@ -130,6 +153,7 @@ export function ChatDemo() {
           <article className="result-card">
             <h3>分類結果</h3>
             <p className="result-type">{result.caseType}</p>
+            <p className="supporting-copy">{result.trace.classification.rationale}</p>
             <ul>
               {result.policyDocs.map((doc) => (
                 <li key={doc.path}>
@@ -201,11 +225,92 @@ export function ChatDemo() {
 
           <article className="result-card result-card-wide">
             <h3>agent trace</h3>
-            <ul>
-              {result.trace.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
-            </ul>
+            <div className="trace-grid">
+              <section className="trace-block">
+                <div className="trace-header">
+                  <h4>分類</h4>
+                  <span className="trace-pill">{result.trace.classification.caseType}</span>
+                </div>
+                <p>{result.trace.classification.rationale}</p>
+                <div className="tag-row">
+                  {result.trace.classification.matchedKeywords.length > 0 ? (
+                    result.trace.classification.matchedKeywords.map((keyword) => (
+                      <span key={keyword} className="tag">
+                        {keyword}
+                      </span>
+                    ))
+                  ) : (
+                    <span className="trace-empty">一致キーワードなし</span>
+                  )}
+                </div>
+              </section>
+
+              <section className="trace-block">
+                <div className="trace-header">
+                  <h4>補問</h4>
+                  <span className="trace-pill">
+                    {result.trace.clarification.missingFields.length} 件
+                  </span>
+                </div>
+                <p>抽出済み: {result.trace.clarification.extractedFields.join(", ") || "なし"}</p>
+                <ul>
+                  {result.trace.clarification.questions.length > 0 ? (
+                    result.trace.clarification.questions.map((question) => (
+                      <li key={question}>{question}</li>
+                    ))
+                  ) : (
+                    <li>追加確認は不要でした。</li>
+                  )}
+                </ul>
+              </section>
+
+              <section className="trace-block">
+                <div className="trace-header">
+                  <h4>参照ルール</h4>
+                  <span className="trace-pill">
+                    {result.trace.ruleReferences.documents.length} docs
+                  </span>
+                </div>
+                <ul>
+                  {result.trace.ruleReferences.appliedRules.map((rule) => (
+                    <li key={rule}>{rule}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="trace-block">
+                <div className="trace-header">
+                  <h4>レビュー</h4>
+                  <span className="trace-pill trace-pill-accent">
+                    {result.trace.review.verdict}
+                  </span>
+                </div>
+                <ul>
+                  {result.trace.review.policyRisks.length > 0 ? (
+                    result.trace.review.policyRisks.map((risk) => (
+                      <li key={risk}>{risk}</li>
+                    ))
+                  ) : (
+                    <li>顕著な規程リスクは検出されませんでした。</li>
+                  )}
+                </ul>
+                <p className="trace-subtitle">人が確認するポイント</p>
+                <ul>
+                  {result.trace.review.humanCheckpoints.map((checkpoint) => (
+                    <li key={checkpoint}>{checkpoint}</li>
+                  ))}
+                </ul>
+              </section>
+            </div>
+
+            <div className="trace-timeline">
+              <p className="trace-subtitle">Timeline</p>
+              <ol>
+                {result.trace.timeline.map((step) => (
+                  <li key={step}>{step}</li>
+                ))}
+              </ol>
+            </div>
           </article>
         </div>
       ) : null}
