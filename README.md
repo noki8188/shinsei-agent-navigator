@@ -2,7 +2,7 @@
 
 社内申請ナビゲーターは、日本企業の申請相談を `agent workflow` で整理する公開デモ向け PoC です。  
 `expense` `purchase` `business_trip` の 3 類型を対象に、分類・補問・参照ルール・レビュー結果を trace として可視化します。  
-`v0.3.1` では、rule-based PoC を維持したまま、OpenAI Responses API と Structured Outputs を使う LLM backend を hardening し、壊れた出力時の fallback と実 provider smoke test まで追加しました。
+`v0.33.0` では、rule-based PoC を維持したまま、OpenAI Responses API と Structured Outputs を使う LLM backend を hardening し、壊れた出力時の fallback と実 provider smoke test まで追加しました。
 
 > English summary: A public-facing PoC for internal workflow support in Japanese companies. The system demonstrates why agent-style orchestration works better than a single chat response for application support: classification, policy retrieval, follow-up questions, draft generation, compliance review, and auditable trace output.
 
@@ -71,7 +71,7 @@ flowchart LR
     DA --> RB
     RA --> RB
     TB --> RB
-    CC -. env switch .-> LLM["OpenAI Responses API impl (v0.3.1)"]
+    CC -. env switch .-> LLM["OpenAI Responses API impl (v0.33.0)"]
     CA -. env switch .-> LLM
     DA -. env switch .-> LLM
     LLM -. fallback .-> RB
@@ -136,7 +136,7 @@ flowchart LR
 - `ReviewAgent`
 - `TraceBuilder`
 
-`v0.3.1` 時点では次の構成です。
+`v0.33.0` 時点では次の構成です。
 
 - `rule_based`: すべてのステージを rule-based 実装で処理
 - `llm`: `CaseClassifier` `ClarificationAgent` `DraftAgent` を OpenAI Responses API 実装へ切り替え
@@ -166,7 +166,7 @@ pip install -e .
 環境変数は `.env.example` を参照してください。  
 `NEXT_PUBLIC_API_BASE_URL` を未設定の場合、frontend は `http://127.0.0.1:8000` を使います。
 
-`v0.3.1` で整理した主な backend 環境変数:
+`v0.33.0` で整理した主な backend 環境変数:
 
 - `SHINSEI_WORKFLOW_BACKEND`: `rule_based` または `llm`
 - `SHINSEI_LLM_PROVIDER`: 現在は `openai`
@@ -226,7 +226,7 @@ curl -X POST http://127.0.0.1:8000/api/chat/demo \
 - `trace.ruleReferences`: 参照ドキュメントと適用ルール
 - `trace.review`: 規程リスクと人手確認ポイント
 
-## v0.3.1 の hardening
+## v0.33.0 の hardening
 
 ### rule-based backend
 
@@ -293,7 +293,7 @@ python3 -m app.evals --backend all
 
 ## 制約事項
 
-- `v0.3.1` はサンプル規程と最小の agent workflow を使った PoC であり、正式な社内規程や承認ワークフローそのものではありません
+- `v0.33.0` はサンプル規程と最小の agent workflow を使った PoC であり、正式な社内規程や承認ワークフローそのものではありません
 - LLM backend は分類・補問・草稿生成のみを対象にした hardening であり、レビューや長期会話制御まではまだ含みません
 - 現在の provider 実装は OpenAI Responses API を正式対応した最小構成で、provider 多様化は未対応です
 - API key がない環境で `SHINSEI_WORKFLOW_BACKEND=llm` を指定すると、各 agent は trace に理由を残して rule-based fallback します
@@ -338,8 +338,8 @@ python3 -m app.evals --backend all
 
 一次情報のみを採用しています。
 
-- [OpenAI Codex](https://openai.com/codex/)
-- [OpenAI: Introducing Codex](https://openai.com/index/introducing-codex/)
+- [OpenAI API: GPT-5.2-Codex](https://developers.openai.com/api/docs/models/gpt-5.2-codex)
+- [OpenAI API: codex-mini-latest](https://developers.openai.com/api/docs/models/codex-mini-latest)
 - [Anthropic: Building Effective AI Agents](https://www.anthropic.com/engineering/building-effective-agents)
 - [IPA: DX動向2025](https://www.ipa.go.jp/digital/chousa/dx-trend/dx-trend-2025.html)
 - [JIPDEC: 企業IT利活用動向調査2025](https://www.jipdec.or.jp/news/news/20250305.html)

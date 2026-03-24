@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "shinsei-navigator-backend"
-version = "0.3.1"
+version = "0.33.0"
 description = "Backend pipeline for the internal application navigator PoC"
 readme = "README.md"
 requires-python = ">=3.10"

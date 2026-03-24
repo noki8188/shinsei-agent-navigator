@@ -3,7 +3,7 @@
 ## 目的
 
 `社内申請ナビゲーター` は、社内申請に関する自然言語相談を受け取り、複数 agent の役割分担で申請支援結果を返す PoC です。  
-`v0.3.1` では、公開デモとして理解しやすいことに加えて、rule-based 実装を残したまま、分類・補問・草稿生成を OpenAI Responses API + Structured Outputs 実装へ hardening しました。
+`v0.33.0` では、公開デモとして理解しやすいことに加えて、rule-based 実装を残したまま、分類・補問・草稿生成を OpenAI Responses API + Structured Outputs 実装へ hardening しました。
 
 ## システム構成
 
@@ -26,7 +26,7 @@ flowchart LR
     DA --> R1
     RA --> R1
     TB --> R1
-    CC -. env switch .-> L1["OpenAI Responses API implementation (v0.3.1)"]
+    CC -. env switch .-> L1["OpenAI Responses API implementation (v0.33.0)"]
     CA -. env switch .-> L1
     DA -. env switch .-> L1
     L1 -. fallback .-> R1
@@ -38,7 +38,7 @@ flowchart LR
 
 - Next.js による単一ページの相談 UI
 - 分類結果、補問候補、申請草稿、承認経路、レビュー結果を表示
-- `v0.3` では classification / clarification / rule references / review に加えて、実行 backend を timeline 先頭で可視化
+- `v0.33` では classification / clarification / rule references / review に加えて、実行 backend を timeline 先頭で可視化
 
 ### Backend
 
@@ -85,7 +85,7 @@ runtime の切り替えは `backend/app/runtime.py` が担当します。
 
 ## 設計上の前提
 
-- `v0.3.1` は実データ非対応
+- `v0.33.0` は実データ非対応
 - 対象業務は `expense` `purchase` `business_trip` のみ
 - 生成結果は提案であり、最終判断は人が行う
 - 承認ルートはサンプル規程に基づく候補表示であり、正式ワークフロー連携は未実装
