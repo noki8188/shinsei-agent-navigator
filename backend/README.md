@@ -1,6 +1,6 @@
 # Backend
 
-Python ベースの agent orchestration を担当する最小実装です。`v0.33.0` では、OpenAI Responses API と Structured Outputs を使う LLM runtime、rule-based fallback、representative eval、OpenAI smoke test を追加しています。
+Python ベースの agent orchestration を担当する最小実装です。`v0.34.0` では、representative eval を 6 シナリオへ拡張し、frontend と README の trace / version 表現を整理しました。
 
 ## セットアップ
 

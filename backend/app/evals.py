@@ -55,6 +55,33 @@ REPRESENTATIVE_SCENARIOS: tuple[ScenarioExpectation, ...] = (
         draft_required_terms=("大阪", "顧客訪問", "確認"),
         review_required_terms=("estimate", "概算費用"),
     ),
+    ScenarioExpectation(
+        name="high_value_saas_purchase",
+        message="営業部で使う商談管理 SaaS を導入したいです。年額 80 万円です。来月から利用開始したいです",
+        expected_case_type=CaseType.PURCHASE,
+        clarification_required=True,
+        expected_missing_fields=("purpose", "location", "quotation"),
+        draft_required_terms=("SaaS", "800,000", "見積書"),
+        review_required_terms=("見積書", "稟議起票"),
+    ),
+    ScenarioExpectation(
+        name="post_trip_ticket_expense",
+        message="名古屋訪問の新幹線代を後から精算したいです。金額は 18,400 円です。領収書はあります",
+        expected_case_type=CaseType.EXPENSE,
+        clarification_required=True,
+        expected_missing_fields=("date", "purpose", "vendor"),
+        draft_required_terms=("18,400", "新幹線", "確認"),
+        review_required_terms=("date", "vendor"),
+    ),
+    ScenarioExpectation(
+        name="last_minute_trip",
+        message="明日から福岡に 1 泊 2 日で出張したいです。展示会参加が目的です。飛行機で移動予定です",
+        expected_case_type=CaseType.BUSINESS_TRIP,
+        clarification_required=True,
+        expected_missing_fields=("estimate",),
+        draft_required_terms=("福岡", "飛行機", "概算費用"),
+        review_required_terms=("estimate", "概算費用"),
+    ),
 )
 
 

@@ -1,71 +1,15 @@
 "use client";
 
 import { FormEvent, useState } from "react";
-
-type ClarificationItem = {
-  field: string;
-  reason: string;
-  prompt: string;
-  required: boolean;
-};
-
-type PolicyDoc = {
-  caseType: string;
-  title: string;
-  path: string;
-  summary: string;
-};
-
-type DraftResult = {
-  title: string;
-  body: string;
-  attachments: string[];
-  approvalRoute: string[];
-  notes: string[];
-};
-
-type ReviewResult = {
-  missingFields: string[];
-  policyRisks: string[];
-  humanCheckpoints: string[];
-};
-
-type PipelineTrace = {
-  classification: {
-    caseType: string;
-    matchedKeywords: string[];
-    rationale: string;
-  };
-  clarification: {
-    extractedFields: string[];
-    missingFields: string[];
-    questions: string[];
-  };
-  ruleReferences: {
-    documents: string[];
-    appliedRules: string[];
-  };
-  review: {
-    verdict: string;
-    policyRisks: string[];
-    humanCheckpoints: string[];
-  };
-  timeline: string[];
-};
-
-type PipelineResponse = {
-  caseType: string;
-  policyDocs: PolicyDoc[];
-  clarificationItems: ClarificationItem[];
-  draftResult: DraftResult;
-  reviewResult: ReviewResult;
-  trace: PipelineTrace;
-};
+import { PipelineResponse } from "../lib/pipeline-types";
 
 const samplePrompts = [
   "在宅勤務用に 27 インチモニターを 1 台買いたいです。予算は 8 万円くらいです",
   "先週の会食代を精算したいです。金額は 12,000 円です",
-  "大阪へ 2 日間の出張申請を出したいです。目的は顧客訪問です"
+  "大阪へ 2 日間の出張申請を出したいです。目的は顧客訪問です",
+  "営業部で使う商談管理 SaaS を導入したいです。年額 80 万円です。来月から利用開始したいです",
+  "名古屋訪問の新幹線代を後から精算したいです。金額は 18,400 円です。領収書はあります",
+  "明日から福岡に 1 泊 2 日で出張したいです。展示会参加が目的です。飛行機で移動予定です"
 ];
 
 export function ChatDemo() {
@@ -107,6 +51,15 @@ export function ChatDemo() {
       setIsSubmitting(false);
     }
   };
+
+  const runtimeLabel = result?.trace.timeline[0]?.replace("Workflow Runtime: ", "") ?? null;
+  const agentTimeline = result ? result.trace.timeline.slice(1) : [];
+  const fallbackCount = agentTimeline.filter((step) =>
+    step.includes("rule-based fallback")
+  ).length;
+  const successCount = agentTimeline.filter((step) =>
+    step.includes("Structured Outputs succeeded")
+  ).length;
 
   return (
     <section className="demo-panel">
@@ -225,6 +178,15 @@ export function ChatDemo() {
 
           <article className="result-card result-card-wide">
             <h3>agent trace</h3>
+            <div className="tag-row">
+              {runtimeLabel ? <span className="tag">runtime: {runtimeLabel}</span> : null}
+              {successCount > 0 ? (
+                <span className="tag">LLM success: {successCount}</span>
+              ) : null}
+              {fallbackCount > 0 ? (
+                <span className="tag">fallback: {fallbackCount}</span>
+              ) : null}
+            </div>
             <div className="trace-grid">
               <section className="trace-block">
                 <div className="trace-header">
@@ -270,6 +232,13 @@ export function ChatDemo() {
                   <span className="trace-pill">
                     {result.trace.ruleReferences.documents.length} docs
                   </span>
+                </div>
+                <div className="tag-row">
+                  {result.trace.ruleReferences.documents.map((document) => (
+                    <span key={document} className="tag">
+                      {document}
+                    </span>
+                  ))}
                 </div>
                 <ul>
                   {result.trace.ruleReferences.appliedRules.map((rule) => (

@@ -2,11 +2,14 @@ from __future__ import annotations
 
 import unittest
 
-from app.evals import evaluate_backend
+from app.evals import REPRESENTATIVE_SCENARIOS, evaluate_backend
 from app.runtime import WorkflowSettings
 
 
 class RepresentativeScenarioEvalTest(unittest.TestCase):
+    def test_representative_scenarios_cover_six_examples(self) -> None:
+        self.assertEqual(len(REPRESENTATIVE_SCENARIOS), 6)
+
     def test_representative_scenarios_pass_rule_based_eval(self) -> None:
         results = evaluate_backend(WorkflowSettings(workflow_backend="rule_based"))
         failed = [result for result in results if not result.success]

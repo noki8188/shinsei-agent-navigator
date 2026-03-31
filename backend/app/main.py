@@ -14,7 +14,7 @@ class ChatRequest(BaseModel):
     department: str | None = None
 
 
-app = FastAPI(title="社内申請ナビゲーター API", version="0.33.0")
+app = FastAPI(title="社内申請ナビゲーター API", version="0.34.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
